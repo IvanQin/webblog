@@ -20,6 +20,11 @@ const userSchema = new mongoose.Schema({
 const mapNameToSchema = {
     "user":userSchema
 };
+/**
+ *
+ * @param dbRequestTemplate a json string
+ * @constructor
+ */
 const DBRequest = function (dbRequestTemplate) {
     this.dbName = dbRequestTemplate.dbName ? dbRequestTemplate.dbName : DEFAULT_DB_NAME;
     this.collectionName = dbRequestTemplate.collectionName;
@@ -29,7 +34,9 @@ const DBRequest = function (dbRequestTemplate) {
 };
 
 /**
- * receive a request in json
+ * Insertion in mongodb
+ * @param document document of mongodb
+ * @param Model model of mongodb
  */
 function dbInsert(document,Model) {
     Model.save(document,(err,res) => {
@@ -41,6 +48,10 @@ function dbInsert(document,Model) {
     });
 }
 
+/**
+ *
+ * @param dbRequestTemplate a json string
+ */
 export function entrance(dbRequestTemplate) {
     let dbRequest = new DBRequest(dbRequestTemplate);
     mongoose.connect(HOST + dbRequest.dbName);
