@@ -46,8 +46,9 @@ const DBRequest = function (dbRequestTemplate) {
     this.dbName = dbReqObj.dbName ? dbReqObj.dbName : DEFAULT_DB_NAME;
     this.collectionName = dbReqObj.collectionName;
     this.operation = dbReqObj.operation;
-    this.schema = mapNameToSchema[this.collectionName]; // TODO: choose schema according to collection Name
+    this.schema = mapNameToSchema[this.collectionName];
     this.document = dbReqObj.document;
+    this.updateDoc = dbReqObj.updateDoc;
 };
 
 function dbDisconnect() {
@@ -64,9 +65,7 @@ function dbInsert(document, Model) {
         let model = new Model(document);
         model.save((err, res) => {
             if (err) {
-                sendErrorMessage();
-                //console.log(err);
-                reject("Error!");
+                reject(err);
             }
             //console.log(res);
             dbDisconnect();
@@ -83,16 +82,40 @@ function dbInsert(document, Model) {
     // }).then();
 
 }
+function dbDelete(document, Model) {
+    return new Promise((resolve, reject) => {
+        Model.remove(document, (err, res) => {
+            if (err) {
+                reject(err);
+            }
+            dbDisconnect();
+            resolve(res);
+        });
+    })
+}
 
+function dbUpdate(document, updateDoc, Model) {
+    return new Promise((resolve, reject) => {
+        Model.update(document, updateDoc, (err, res) => {
+            if (err) {
+                reject(err);
+            }
+            dbDisconnect();
+            resolve(res);
+        })
+    })
+}
 function dbSearch(document, Model) {
-    Model.find(document, (err, res) => {
-        if (err) {
-            sendErrorMessage();
-            console.log(err);
-        }
-        console.log(res);
-        dbDisconnect();
+    return new Promise((resolve, reject) => {
+        Model.find(document, (err, res) => {
+            if (err) {
+                reject(err);
+            }
+            dbDisconnect();
+            resolve(res);
+        });
     });
+
 }
 
 /**
@@ -100,25 +123,6 @@ function dbSearch(document, Model) {
  * @param dbRequestTemplate a json string
  */
 export function entrance(dbRequestTemplate) {
-    // return new Promise((resolve, reject) => {
-    //     let dbRequest = new DBRequest(dbRequestTemplate);
-    //     mongoose.connect(HOST + dbRequest.dbName);
-    //     let Model = mongoose.model(dbRequest.collectionName, dbRequest.schema);
-    //     switch (dbRequest.operation) {
-    //         case 0:
-    //             dbInsert(dbRequest.document, Model).then(res => {
-    //                 resolve(res);
-    //             }, err => {
-    //                 reject(err)
-    //             });
-    //             break; // 0 --> insert
-    //         case 1:
-    //             break; // 1 --> update
-    //         case 2:
-    //             dbSearch(dbRequest.document, Model);
-    //             break; // 2 --> search
-    //     }
-    // });
 
     let dbRequest = new DBRequest(dbRequestTemplate);
     mongoose.connect(HOST + dbRequest.dbName);
@@ -129,12 +133,14 @@ export function entrance(dbRequestTemplate) {
             retPromise = dbInsert(dbRequest.document, Model);
             break; // 0 --> insert
         case 1:
+            retPromise = dbUpdate(dbRequest.document, dbRequest.updateDoc, Model);
             break; // 1 --> update
         case 2:
-            dbSearch(dbRequest.document, Model);
-
+            retPromise = dbSearch(dbRequest.document, Model);
             break; // 2 --> search
-
+        case 3:
+            retPromise = dbDelete(dbRequest.document, Model);
+            break;
     }
     return retPromise;
 }
