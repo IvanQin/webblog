@@ -9,6 +9,7 @@ var mongoose = require('mongoose');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
+var db = require('./routes/database');
 
 var app = express();
 
@@ -18,8 +19,8 @@ app.set('view engine', 'jade');
 
 // Another cross domain visit by cors
 app.use(cors({
-    origin:['http://localhost:8080'],
-    methods:['GET','POST'],
+    origin: ['http://localhost:8080'],
+    methods: ['GET', 'POST'],
 }));
 
 // uncomment after placing your favicon in /public
@@ -32,6 +33,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
 app.use('/users', users);
+app.use('/db', db);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
