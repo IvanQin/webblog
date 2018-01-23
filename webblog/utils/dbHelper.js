@@ -1,12 +1,7 @@
 /**
  * Created by Qinyifan on 17/12/27.
  */
-import {sendErrorMessage} from './messageHandler'
 const mongoose = require('mongoose');
-
-/**
-
- */
 
 const DEFAULT_DB_NAME = "";
 const HOST = "mongodb://127.0.0.1:27017/";
@@ -33,8 +28,43 @@ const userSchema = new mongoose.Schema({
     }
 });
 
+const notesSchema = new mongoose.Schema({
+    category :{
+        type: String,
+        enum:["Study","Life","Love"]
+    },
+    description: {
+        type: String
+    },
+    status:{
+        type:String,
+        enum:["Pending","Doing","Finished"]
+    },
+    userId:{
+        type:mongoose.Schema.Types.ObjectId
+    }
+
+});
+
+const articleSchema = new mongoose.Schema({
+    title:{
+        type:String
+    },
+    userId:{
+        type:mongoose.Schema.Types.ObjectId
+    },
+    content:{
+        type:String
+    },
+    updateTime:{
+        type:Date,
+        default:Date.now
+    }
+});
 const mapNameToSchema = {
-    "user": userSchema
+    "user": userSchema,
+    "article": articleSchema,
+    "notes": notesSchema
 };
 /**
  *
@@ -122,6 +152,7 @@ function dbSearch(document, Model) {
  *
  * @param dbRequestTemplate a json string
  */
+
 export function entrance(dbRequestTemplate) {
 
     let dbRequest = new DBRequest(dbRequestTemplate);
@@ -144,3 +175,4 @@ export function entrance(dbRequestTemplate) {
     }
     return retPromise;
 }
+//module.exports = entrance;
