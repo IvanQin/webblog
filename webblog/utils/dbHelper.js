@@ -50,8 +50,13 @@ const articleSchema = new mongoose.Schema({
     title:{
         type:String
     },
-    userId:{
-        type:mongoose.Schema.Types.ObjectId
+    tag:{
+        type:String,
+        default:"default"
+    },
+    author:{
+        name:String,
+        id:String // corresponding to _id in user . This id is just for a unique identifier for the user
     },
     content:{
         type:String
@@ -59,6 +64,10 @@ const articleSchema = new mongoose.Schema({
     updateTime:{
         type:Date,
         default:Date.now
+    },
+    viewTimes:{
+        type:Number,
+        default:0
     }
 });
 const mapNameToSchema = {
@@ -145,7 +154,17 @@ function dbSearch(document, Model) {
             resolve(res);
         });
     });
-
+}
+function dbSearchById(document, Model){
+    return new Promise((resolve,reject)=>{
+        Model.findById(document.id,(err,res)=>{ // id is a string or number
+            if (err){
+                reject(err);
+            }
+            dbDisconnect();
+            resolve(res);
+        });
+    });
 }
 
 /**
@@ -171,7 +190,10 @@ export function entrance(dbRequestTemplate) {
             break; // 2 --> search
         case 3:
             retPromise = dbDelete(dbRequest.document, Model);
-            break;
+            break; // 3 --> delete
+        case 4:
+            retPromise = dbSearchById(dbRequest.document,Model);
+            break; // 4 --> search by id
     }
     return retPromise;
 }
