@@ -28,20 +28,35 @@ const userSchema = new mongoose.Schema({
     }
 });
 
-const notesSchema = new mongoose.Schema({
-    category :{
+const noteSchema = new mongoose.Schema({
+    tag :{
         type: String,
-        enum:["Study","Life","Love"]
+        enum:["Study","Life","Love","Tech"]
     },
     description: {
         type: String
     },
     status:{
-        type:String,
-        enum:["Pending","Doing","Finished"]
+        type: Boolean, // show or hide
+        default: true
     },
-    userId:{
-        type:mongoose.Schema.Types.ObjectId
+    // status:{
+    //     type:String,
+    //     enum:["Pending","Doing","Due","Done"]
+    // },
+    author:{
+        name:String,
+        id:String // corresponding to _id in user . This id is just for a unique identifier for the user
+    },
+    updateTime:{
+        type:Date,
+        default:Date.now
+    },
+    expectedTime:{
+        type:Date,
+    },
+    details:{
+        type:String // markdown
     }
 
 });
@@ -73,7 +88,7 @@ const articleSchema = new mongoose.Schema({
 const mapNameToSchema = {
     "user": userSchema,
     "article": articleSchema,
-    "notes": notesSchema
+    "note": noteSchema
 };
 /**
  *
