@@ -37,8 +37,8 @@ const noteSchema = new mongoose.Schema({
         type: String
     },
     status:{
-        type: Boolean, // show or hide
-        default: true
+        type: Boolean, // true -> finished, false -> unfinished
+        default: false
     },
     // status:{
     //     type:String,
@@ -182,6 +182,43 @@ function dbSearchById(document, Model){
     });
 }
 
+function dbDeleteById(document,Model){
+    return new Promise((resolve, reject)=>{
+        Model.findByIdAndRemove(document.id,(err,res)=>{
+            if (err){
+                reject(err);
+            }
+            dbDisconnect();
+            resolve(res);
+        });
+    })
+}
+
+function dbUpdateById(document,updateDoc, Model){
+    return new Promise((resolve, reject)=>{
+        Model.findByIdAndUpdate(document.id,updateDoc, (err,res) => {
+            if (err){
+                reject(err);
+            }
+            dbDisconnect();
+            resolve(res);
+
+        });
+    })
+
+}
+function dbUpdateMany(document,updateDoc, Model){
+    return new Promise((resolve, reject)=>{
+        Model.updateMany(document ,updateDoc, (err,res) => {
+            if (err){
+                reject(err);
+            }
+            dbDisconnect();
+            resolve(res);
+        });
+    })
+
+}
 /**
  *
  * @param dbRequestTemplate a json string
@@ -209,6 +246,15 @@ export function entrance(dbRequestTemplate) {
         case 4:
             retPromise = dbSearchById(dbRequest.document,Model);
             break; // 4 --> search by id
+        case 5:
+            retPromise = dbDeleteById(dbRequest.document,Model);
+            break;
+        case 6:
+            retPromise = dbUpdateById(dbRequest.document,dbRequest.updateDoc,Model);
+            break;
+        case 7:
+            retPromise = dbUpdateMany(dbRequest.document,dbRequest.updateDoc,Model);
+            break;
     }
     return retPromise;
 }
