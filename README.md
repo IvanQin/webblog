@@ -14,3 +14,4 @@ My personal web blog
 - [Mongoose type](http://blog.csdn.net/zccz14/article/details/51298545) Types reference in mongoose.
 - CommonJS vs ES6: (module.exports,exports,require) vs (export,export default,import)
 - Using ES6 in Express: [Tutorial](https://segmentfault.com/a/1190000006707756) (`npm install --save-dev babel-cli`)
+- MapReduce on mongoose. Implement `map``reduce` functions. See [tutorial1](http://blog.csdn.net/huntzw/article/details/7753527) [tutorial2](http://www.runoob.com/mongodb/mongodb-map-reduce.html)
