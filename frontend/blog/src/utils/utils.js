@@ -4,7 +4,7 @@
 const DEFAULT_DB_NAME = "test";
 /**
  * Generate template for db operation between frontend and backend
- * @param opID: operation ID ( defined in webblog/utils/dbHelper.js )
+ * @param opID: operation ID ( defined in expressServer/utils/dbHelper.js )
  * @param collectionName: the name of collection to operate in mongodb
  * @param data: content
  * @returns {{dbName: string, collectionName: *, operation: *, document: *, updateDoc: *}}

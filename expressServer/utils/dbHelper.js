@@ -219,6 +219,21 @@ function dbUpdateMany(document,updateDoc, Model){
     })
 
 }
+
+function dbGroupBy(){
+    let command = {
+        mapreduce:"note",
+        map:function(){emit(this.tag,this.details)},
+        reduce:function(key,values){
+            return values;
+        },
+        out:"tmpnote"
+    };
+    console.log("enter group by");
+    mongoose.connection.db.executeDbCommand(command, (err, res) =>{
+        console.log(res);
+    });
+}
 /**
  *
  * @param dbRequestTemplate a json string
@@ -254,6 +269,9 @@ export function entrance(dbRequestTemplate) {
             break;
         case 7:
             retPromise = dbUpdateMany(dbRequest.document,dbRequest.updateDoc,Model);
+            break;
+        case 8:
+            retPromise = dbGroupBy();// for debug
             break;
     }
     return retPromise;
