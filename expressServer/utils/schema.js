@@ -83,3 +83,49 @@ export const articleSchema = new mongoose.Schema({
     }
 });
 
+export const easyAccountRoomSchema = new mongoose.Schema({
+    id:{ // the id of one record
+        type: String,
+        required:true,
+        unique:true
+    },
+    people:{
+        type: Array,
+        required:true
+    },
+    createTime:{
+        type:Date,
+        default:Date.now
+    },
+});
+
+export const easyAccountRecordSchema = new mongoose.Schema({
+    roomId:{ // roomId
+        type:String,
+        required:true
+    },
+    author:{
+        type:String,
+        required:true
+    },
+    event:{
+        type:String,
+        required:true
+    },
+    totalAmount:{
+        type:Number
+    },
+    involvedPeople:{
+        type: [String]
+    },
+    averageAmount:{
+        type:Number
+    },
+    time:{
+        type:Date
+    },
+    comment:{
+        type:String
+    }
+});
+

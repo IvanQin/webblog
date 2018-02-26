@@ -11,7 +11,8 @@ const schema = require('./schema');
 const mapNameToSchema = {
     "user": schema.userSchema,
     "article": schema.articleSchema,
-    "note": schema.noteSchema
+    "note": schema.noteSchema,
+    "record": schema.easyAccountRecordSchema
 };
 /**
  *
@@ -25,7 +26,8 @@ const DBRequest = function (dbRequestTemplate) {
     this.operation = dbReqObj.operation;
     this.schema = mapNameToSchema[this.collectionName];
     this.document = dbReqObj.document;
-    this.updateDoc = dbReqObj.updateDoc;
+    this.updateDoc = dbReqObj.updateDoc? dbReqObj.updateDoc: {}; // required if the operation is 'update'
+    this.projectionDoc = dbReqObj.projectionDoc? dbReqObj.projectionDoc: {}; // required if the operation is 'search'
 };
 
 function dbDisconnect() {
@@ -82,9 +84,16 @@ function dbUpdate(document, updateDoc, Model) {
         })
     })
 }
-function dbSearch(document, Model) {
+/**
+ * Search in mongodb.
+ * @param document search condition (e.g. {name:"Peter"} means find records that name is Peter.)
+ * @param projectionDoc (optional) return doc (e.g. {name:1} means return name of the found record.
+ * @param Model mongoose model
+ * @returns {Promise}
+ */
+function dbSearch(document, projectionDoc, Model) {
     return new Promise((resolve, reject) => {
-        Model.find(document, (err, res) => {
+        Model.find(document, projectionDoc, (err, res) => {
             if (err) {
                 reject(err);
             }
@@ -93,10 +102,17 @@ function dbSearch(document, Model) {
         });
     });
 }
-function dbSearchById(document, Model){
-    return new Promise((resolve,reject)=>{
-        Model.findById(document.id,(err,res)=>{ // id is a string or number
-            if (err){
+/**
+ * Search by Id in mongodb.
+ * @param document see {@link #dbSearch}
+ * @param projectionDoc see {@link #dbSearch}
+ * @param Model see {@link #dbSearch}
+ * @returns {Promise}
+ */
+function dbSearchById(document,projectionDoc, Model) {
+    return new Promise((resolve, reject) => {
+        Model.findById(document.id, projectionDoc,(err, res) => { // id is a string or number
+            if (err) {
                 reject(err);
             }
             dbDisconnect();
@@ -105,10 +121,10 @@ function dbSearchById(document, Model){
     });
 }
 
-function dbDeleteById(document,Model){
-    return new Promise((resolve, reject)=>{
-        Model.findByIdAndRemove(document.id,(err,res)=>{
-            if (err){
+function dbDeleteById(document, Model) {
+    return new Promise((resolve, reject) => {
+        Model.findByIdAndRemove(document.id, (err, res) => {
+            if (err) {
                 reject(err);
             }
             dbDisconnect();
@@ -117,10 +133,10 @@ function dbDeleteById(document,Model){
     })
 }
 
-function dbUpdateById(document,updateDoc, Model){
-    return new Promise((resolve, reject)=>{
-        Model.findByIdAndUpdate(document.id,updateDoc, (err,res) => {
-            if (err){
+function dbUpdateById(document, updateDoc, Model) {
+    return new Promise((resolve, reject) => {
+        Model.findByIdAndUpdate(document.id, updateDoc, (err, res) => {
+            if (err) {
                 reject(err);
             }
             dbDisconnect();
@@ -130,10 +146,10 @@ function dbUpdateById(document,updateDoc, Model){
     })
 
 }
-function dbUpdateMany(document,updateDoc, Model){
-    return new Promise((resolve, reject)=>{
-        Model.updateMany(document ,updateDoc, (err,res) => {
-            if (err){
+function dbUpdateMany(document, updateDoc, Model) {
+    return new Promise((resolve, reject) => {
+        Model.updateMany(document, updateDoc, (err, res) => {
+            if (err) {
                 reject(err);
             }
             dbDisconnect();
@@ -143,17 +159,19 @@ function dbUpdateMany(document,updateDoc, Model){
 
 }
 
-function dbGroupBy(){
+function dbGroupBy() {
     let command = {
-        mapreduce:"note",
-        map:function(){emit(this.tag,this.details)},
-        reduce:function(key,values){
+        mapreduce: "note",
+        map: function () {
+            emit(this.tag, this.details)
+        },
+        reduce: function (key, values) {
             return values;
         },
-        out:"tmpnote"
+        out: "tmpnote"
     };
     console.log("enter group by");
-    mongoose.connection.db.executeDbCommand(command, (err, res) =>{
+    mongoose.connection.db.executeDbCommand(command, (err, res) => {
         console.log(res);
     });
 }
@@ -176,22 +194,22 @@ export function entrance(dbRequestTemplate) {
             retPromise = dbUpdate(dbRequest.document, dbRequest.updateDoc, Model);
             break; // 1 --> update
         case 2:
-            retPromise = dbSearch(dbRequest.document, Model);
+            retPromise = dbSearch(dbRequest.document,dbRequest.projectionDoc, Model);
             break; // 2 --> search
         case 3:
             retPromise = dbDelete(dbRequest.document, Model);
             break; // 3 --> delete
         case 4:
-            retPromise = dbSearchById(dbRequest.document,Model);
+            retPromise = dbSearchById(dbRequest.document, dbRequest.projectionDoc, Model);
             break; // 4 --> search by id
         case 5:
-            retPromise = dbDeleteById(dbRequest.document,Model);
+            retPromise = dbDeleteById(dbRequest.document, Model);
             break;
         case 6:
-            retPromise = dbUpdateById(dbRequest.document,dbRequest.updateDoc,Model);
+            retPromise = dbUpdateById(dbRequest.document, dbRequest.updateDoc, Model);
             break;
         case 7:
-            retPromise = dbUpdateMany(dbRequest.document,dbRequest.updateDoc,Model);
+            retPromise = dbUpdateMany(dbRequest.document, dbRequest.updateDoc, Model);
             break;
         case 8:
             retPromise = dbGroupBy();// for debug
