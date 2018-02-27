@@ -16,7 +16,8 @@ export function getDbOperationTemplate(opID,collectionName,data){
         "collectionName": collectionName,
         "operation": opID,
         "document": data.document?data.document:{},
-        "updateDoc": data.updateDoc?data.updateDoc:{}
+        "updateDoc": data.updateDoc?data.updateDoc:{},
+        "projectionDoc": data.projectionDoc? data.projectionDoc:{}
     };
     return template;
 };
