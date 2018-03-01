@@ -10,7 +10,7 @@ var mongoose = require('mongoose');
 var index = require('./routes/index');
 var users = require('./routes/users');
 var db = require('./routes/database');
-
+var api = require('./routes/api');
 var app = express();
 
 // view engine setup
@@ -34,6 +34,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', index);
 app.use('/users', users);
 app.use('/db', db); // only accept post method
+app.use('/api',api);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
