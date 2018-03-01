@@ -12,7 +12,9 @@ const mapNameToSchema = {
     "user": schema.userSchema,
     "article": schema.articleSchema,
     "note": schema.noteSchema,
-    "record": schema.easyAccountRecordSchema
+    "record": schema.easyAccountRecordSchema,
+    "room": schema.easyAccountRoomSchema,
+    "auth": schema.easyAccountAuthUserSchema
 };
 /**
  *
@@ -26,8 +28,8 @@ const DBRequest = function (dbRequestTemplate) {
     this.operation = dbReqObj.operation;
     this.schema = mapNameToSchema[this.collectionName];
     this.document = dbReqObj.document;
-    this.updateDoc = dbReqObj.updateDoc? dbReqObj.updateDoc: {}; // required if the operation is 'update'
-    this.projectionDoc = dbReqObj.projectionDoc? dbReqObj.projectionDoc: {}; // required if the operation is 'search'
+    this.updateDoc = dbReqObj.updateDoc ? dbReqObj.updateDoc : {}; // required if the operation is 'update'
+    this.projectionDoc = dbReqObj.projectionDoc ? dbReqObj.projectionDoc : {}; // required if the operation is 'search'
 };
 
 function dbDisconnect() {
@@ -109,9 +111,9 @@ function dbSearch(document, projectionDoc, Model) {
  * @param Model see {@link #dbSearch}
  * @returns {Promise}
  */
-function dbSearchById(document,projectionDoc, Model) {
+function dbSearchById(document, projectionDoc, Model) {
     return new Promise((resolve, reject) => {
-        Model.findById(document.id, projectionDoc,(err, res) => { // id is a string or number
+        Model.findById(document.id, projectionDoc, (err, res) => { // id is a string or number
             if (err) {
                 reject(err);
             }
@@ -194,7 +196,7 @@ export function entrance(dbRequestTemplate) {
             retPromise = dbUpdate(dbRequest.document, dbRequest.updateDoc, Model);
             break; // 1 --> update
         case 2:
-            retPromise = dbSearch(dbRequest.document,dbRequest.projectionDoc, Model);
+            retPromise = dbSearch(dbRequest.document, dbRequest.projectionDoc, Model);
             break; // 2 --> search
         case 3:
             retPromise = dbDelete(dbRequest.document, Model);

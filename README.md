@@ -15,3 +15,11 @@ My personal web blog
 - CommonJS vs ES6: (module.exports,exports,require) vs (export,export default,import)
 - Using ES6 in Express: [Tutorial](https://segmentfault.com/a/1190000006707756) (`npm install --save-dev babel-cli`)
 - MapReduce on mongoose. Implement `map``reduce` functions. See [tutorial1](http://blog.csdn.net/huntzw/article/details/7753527) [tutorial2](http://www.runoob.com/mongodb/mongodb-map-reduce.html)
+- [Mongoose operation](https://www.jianshu.com/p/2f54b90efe15)
+
+### problems encountered
+- If you think the router is not updated, restart the server !db
+
+### Issue
+- The cross-domain cookie cannot be set. [See 1](https://stackoverflow.com/questions/26987815/ajax-cross-domain-response-cookie-ignored-by-chrome) [See 2](https://www.v2ex.com/t/153576)
+- How to create session in mongodb [tutor](http://blog.csdn.net/pretent/article/details/45204909)

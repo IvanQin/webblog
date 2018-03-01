@@ -26,14 +26,14 @@ export const userSchema = new mongoose.Schema({
 });
 
 export const noteSchema = new mongoose.Schema({
-    tag :{
+    tag: {
         type: String,
-        enum:["Study","Life","Love","Tech"]
+        enum: ["Study", "Life", "Love", "Tech"]
     },
     description: {
         type: String
     },
-    status:{
+    status: {
         type: Boolean, // true -> finished, false -> unfinished
         default: false
     },
@@ -41,91 +41,107 @@ export const noteSchema = new mongoose.Schema({
     //     type:String,
     //     enum:["Pending","Doing","Due","Done"]
     // },
-    author:{
-        name:String,
-        id:String // corresponding to _id in user . This id is just for a unique identifier for the user
+    author: {
+        name: String,
+        id: String // corresponding to _id in user . This id is just for a unique identifier for the user
     },
-    updateTime:{
-        type:Date,
-        default:Date.now
+    updateTime: {
+        type: Date,
+        default: Date.now
     },
-    expectedTime:{
-        type:Date,
+    expectedTime: {
+        type: Date,
     },
-    details:{
-        type:String // markdown
+    details: {
+        type: String // markdown
     }
 
 });
 
 export const articleSchema = new mongoose.Schema({
-    title:{
-        type:String
+    title: {
+        type: String
     },
-    tag:{
-        type:String,
-        default:"default"
+    tag: {
+        type: String,
+        default: "default"
     },
-    author:{
-        name:String,
-        id:String // corresponding to _id in user . This id is just for a unique identifier for the user
+    author: {
+        name: String,
+        id: String // corresponding to _id in user . This id is just for a unique identifier for the user
     },
-    content:{
-        type:String
+    content: {
+        type: String
     },
-    updateTime:{
-        type:Date,
-        default:Date.now
+    updateTime: {
+        type: Date,
+        default: Date.now
     },
-    viewTimes:{
-        type:Number,
-        default:0
+    viewTimes: {
+        type: Number,
+        default: 0
     }
 });
 
 export const easyAccountRoomSchema = new mongoose.Schema({
-    id:{ // the id of one record
+    id: { // the id of one record
         type: String,
-        required:true,
-        unique:true
+        required: true,
+        unique: true
     },
-    people:{
+    people: {
         type: Array,
-        required:true
+        required: true
     },
-    createTime:{
-        type:Date,
-        default:Date.now
+    createTime: {
+        type: Date,
+        default: Date.now
     },
-});
-
-export const easyAccountRecordSchema = new mongoose.Schema({
-    roomId:{ // roomId
-        type:String,
-        required:true
-    },
-    author:{
-        type:String,
-        required:true
-    },
-    event:{
-        type:String,
-        required:true
-    },
-    totalAmount:{
-        type:Number
-    },
-    involvedPeople:{
-        type: [String]
-    },
-    averageAmount:{
-        type:Number
-    },
-    time:{
-        type:Date
-    },
-    comment:{
-        type:String
+    password: {
+        type: String
     }
 });
 
+export const easyAccountRecordSchema = new mongoose.Schema({
+    roomId: { // roomId
+        type: String,
+        required: true
+    },
+    author: {
+        type: String,
+        required: true
+    },
+    event: {
+        type: String,
+        required: true
+    },
+    totalAmount: {
+        type: Number
+    },
+    involvedPeople: {
+        type: [String]
+    },
+    averageAmount: {
+        type: Number
+    },
+    time: {
+        type: Date
+    },
+    comment: {
+        type: String
+    }
+});
+
+export const easyAccountAuthUserSchema = new mongoose.Schema({
+    token: {
+        type: String,
+    },
+    createAt: {
+        type: Date,
+        expires: 60, // '1m' does not work at all!
+        default: Date.now
+    },
+    roomId: {
+        type: String
+    },
+});
