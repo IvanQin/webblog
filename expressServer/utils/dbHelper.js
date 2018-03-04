@@ -7,7 +7,7 @@ const DEFAULT_DB_NAME = "";
 const HOST = "mongodb://127.0.0.1:27017/";
 
 const schema = require('./schema');
-
+const SUCCESS_MSG = 'Success!';
 const mapNameToSchema = {
     "user": schema.userSchema,
     "article": schema.articleSchema,
@@ -50,7 +50,7 @@ function dbInsert(document, Model) {
             }
             //console.log(res);
             dbDisconnect();
-            resolve("Success!");
+            resolve(SUCCESS_MSG);
         }).then();
     });
     // Model.create(document, (err, res) => {
@@ -130,7 +130,7 @@ function dbDeleteById(document, Model) {
                 reject(err);
             }
             dbDisconnect();
-            resolve(res);
+            resolve(SUCCESS_MSG);
         });
     })
 }
@@ -142,7 +142,7 @@ function dbUpdateById(document, updateDoc, Model) {
                 reject(err);
             }
             dbDisconnect();
-            resolve(res);
+            resolve(SUCCESS_MSG);
 
         });
     })
@@ -206,10 +206,10 @@ export function entrance(dbRequestTemplate) {
             break; // 4 --> search by id
         case 5:
             retPromise = dbDeleteById(dbRequest.document, Model);
-            break;
+            break; // 5 --> delete by id
         case 6:
             retPromise = dbUpdateById(dbRequest.document, dbRequest.updateDoc, Model);
-            break;
+            break; // 6 --> update by id
         case 7:
             retPromise = dbUpdateMany(dbRequest.document, dbRequest.updateDoc, Model);
             break;
