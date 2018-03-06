@@ -16,6 +16,17 @@ const mapNameToSchema = {
     "room": schema.easyAccountRoomSchema,
     "auth": schema.easyAccountAuthUserSchema
 };
+
+const INSERT = 0;
+const UPDATE = 1;
+const SEARCH = 2;
+const DELETE = 3;
+const SEARCH_BY_ID = 4;
+const DELETE_BY_ID = 5;
+const UPDATE_BY_ID = 6;
+const UPDATE_MANY = 7;
+const GROUP_BY = 8;
+
 /**
  *
  * @param dbRequestTemplate a JSON string, not a JSON object!
@@ -182,38 +193,39 @@ function dbGroupBy() {
  * @param dbRequestTemplate a json string
  */
 
+
 export function entrance(dbRequestTemplate) {
 
-    let dbRequest = new DBRequest(dbRequestTemplate);
+    let dbRequest = new DBRequest(dbRequestTemplate); // js object
     mongoose.connect(HOST + dbRequest.dbName);
     let Model = mongoose.model(dbRequest.collectionName, dbRequest.schema);
     let retPromise;
     switch (dbRequest.operation) {
-        case 0:
+        case INSERT:
             retPromise = dbInsert(dbRequest.document, Model);
             break; // 0 --> insert
-        case 1:
+        case UPDATE:
             retPromise = dbUpdate(dbRequest.document, dbRequest.updateDoc, Model);
             break; // 1 --> update
-        case 2:
+        case SEARCH:
             retPromise = dbSearch(dbRequest.document, dbRequest.projectionDoc, Model);
             break; // 2 --> search
-        case 3:
+        case DELETE:
             retPromise = dbDelete(dbRequest.document, Model);
             break; // 3 --> delete
-        case 4:
+        case SEARCH_BY_ID:
             retPromise = dbSearchById(dbRequest.document, dbRequest.projectionDoc, Model);
             break; // 4 --> search by id
-        case 5:
+        case DELETE_BY_ID:
             retPromise = dbDeleteById(dbRequest.document, Model);
             break; // 5 --> delete by id
-        case 6:
+        case UPDATE_BY_ID:
             retPromise = dbUpdateById(dbRequest.document, dbRequest.updateDoc, Model);
             break; // 6 --> update by id
-        case 7:
+        case UPDATE_MANY:
             retPromise = dbUpdateMany(dbRequest.document, dbRequest.updateDoc, Model);
             break;
-        case 8:
+        case GROUP_BY:
             retPromise = dbGroupBy();// for debug
             break;
     }
