@@ -99,6 +99,10 @@ export const easyAccountRoomSchema = new mongoose.Schema({
     },
     password: {
         type: String
+    },
+    currencyUnit: {
+        type: String,
+        default: 'USD'
     }
 });
 
