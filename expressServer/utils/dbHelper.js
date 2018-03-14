@@ -7,7 +7,8 @@ const DEFAULT_DB_NAME = "";
 const HOST = "mongodb://127.0.0.1:27017/";
 
 const schema = require('./schema');
-const SUCCESS_MSG = 'Success!';
+const message = require('./message');
+
 const mapNameToSchema = {
     "user": schema.userSchema,
     "article": schema.articleSchema,
@@ -61,7 +62,7 @@ function dbInsert(document, Model) {
             }
             //console.log(res);
             dbDisconnect();
-            resolve(SUCCESS_MSG);
+            resolve(message.SUCCESS_MSG);
         }).then();
     });
     // Model.create(document, (err, res) => {
@@ -141,7 +142,7 @@ function dbDeleteById(document, Model) {
                 reject(err);
             }
             dbDisconnect();
-            resolve(SUCCESS_MSG);
+            resolve(message.SUCCESS_MSG);
         });
     })
 }
@@ -153,7 +154,7 @@ function dbUpdateById(document, updateDoc, Model) {
                 reject(err);
             }
             dbDisconnect();
-            resolve(SUCCESS_MSG);
+            resolve(message.SUCCESS_MSG);
 
         });
     })

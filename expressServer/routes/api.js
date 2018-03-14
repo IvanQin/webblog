@@ -5,6 +5,7 @@ const express = require('express');
 const router = express.Router();
 const dbHelper = require("../utils/dbHelper");
 const md5 = require('js-md5');
+const message = require('../utils/message');
 router.post('/', function (req, res, next) {
     let content = req.body;
     dbHelper.entrance(JSON.stringify(content)).then(resolve => res.send(resolve), rej => res.send(rej));
@@ -29,10 +30,9 @@ router.post('/validate-token', (req, res, next)=>{
     let content = req.body;
     let validateTokenRequest = content['dbDocument'];
     dbHelper.entrance(JSON.stringify(validateTokenRequest)).then(resolve => {
-        console.log(resolve);
         if (JSON.stringify(resolve).length != 0) {
-            res.send({'status': 'OK'})
-        } // TODO change ok
+            res.send({'status': message.SUCCESS_MSG})
+        }
     }, rej => res.send(rej));
 
 });

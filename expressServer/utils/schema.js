@@ -142,7 +142,7 @@ export const easyAccountAuthUserSchema = new mongoose.Schema({
     },
     createAt: {
         type: Date,
-        expires: 60, // '1m' does not work at all!
+        expires: 3600*24, // '1m' does not work at all!
         default: Date.now
     },
     roomId: {
