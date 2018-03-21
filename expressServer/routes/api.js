@@ -26,14 +26,19 @@ router.post('/get-token', (req, res, next) => {
 
 });
 
-router.post('/validate-token', (req, res, next)=>{
+router.post('/validate-token', (req, res, next) => {
     let content = req.body;
     let validateTokenRequest = content['dbDocument'];
     dbHelper.entrance(JSON.stringify(validateTokenRequest)).then(resolve => {
-        if (JSON.stringify(resolve).length != 0) {
-            res.send({'status': message.SUCCESS_MSG})
+        if (resolve.length != 0) { // resolve is a javascript object and does not need to be parsed.
+            res.send({'status': message.SUCCESS_MSG});
         }
-    }, rej => res.send(rej));
+        else {
+            res.send({'status': message.SESSION_EXPIRED});
+        }
+    }, rej => {
+        res.send(rej);
+    });
 
 });
 module.exports = router;
