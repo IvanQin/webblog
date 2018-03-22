@@ -23,3 +23,16 @@ My personal web blog
 ### Issue
 - The cross-domain cookie cannot be set. [See 1](https://stackoverflow.com/questions/26987815/ajax-cross-domain-response-cookie-ignored-by-chrome) [See 2](https://www.v2ex.com/t/153576)
 - How to create session in mongodb [tutor](http://blog.csdn.net/pretent/article/details/45204909)
+- How to use html files instead of 'jade' in Node.js express [some discussion](http://cnodejs.org/topic/50c60035637ffa41550d7a87)
+
+### TODO
+- [ x ] how to output log on the server side.
+- [ x ] establish mongodb on the server.
+- [ x ] install node on the server.
+- [ ] deploy html on the node. 
+
+
+### About deployment
+- `yum install -y`, `-y` means choose 'yes' all the time.
+- [Yum install mongodb](https://segmentfault.com/a/1190000000664683) How to install mongodb in RedHat.
+- use `ctrl-A + ctrl-D` to exit the `screen` in linux. 
