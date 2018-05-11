@@ -19,7 +19,7 @@ app.set('view engine', 'jade');
 
 // Another cross domain visit by cors
 app.use(cors({
-    origin: ['http://localhost:8080'],
+    origin: ['http://localhost:8080', 'http://localhost:8000'],
     methods: ['GET', 'POST'],
 }));
 
@@ -34,7 +34,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', index);
 app.use('/users', users);
 app.use('/db', db); // only accept post method
-app.use('/api',api);
+app.use('/api', api);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
